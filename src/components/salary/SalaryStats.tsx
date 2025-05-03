@@ -197,7 +197,7 @@ export function SalaryStats({ entries, selectedIdx, cpiData }: SalaryStatsProps)
   }
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 justify-center">
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 justify-center xl:grid-cols-4">
       {/* Total Changes */}
       <div className="space-y-2">
         <div className="flex items-center gap-2">

@@ -13,12 +13,14 @@ interface CollapsibleSectionProps {
   title: string;
   children: React.ReactNode;
   defaultOpen?: boolean;
+  className?: string;
 }
 
 export function CollapsibleSection({
   title,
   children,
   defaultOpen = true,
+  className = "",
 }: CollapsibleSectionProps) {
   const [isOpen, setIsOpen] = useState(defaultOpen);
 
@@ -26,7 +28,7 @@ export function CollapsibleSection({
     <Collapsible 
       open={isOpen} 
       onOpenChange={setIsOpen} 
-      className="w-full"
+      className={`w-full ${className}`}
     >
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-xl font-semibold">{title}</h2>

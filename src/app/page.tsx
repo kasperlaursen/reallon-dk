@@ -37,9 +37,9 @@ export default function Home() {
   return (
     <div className="flex flex-col items-center min-h-screen p-2 sm:p-8 gap-6 sm:gap-12 bg-background">
       <AppHeader />
-      <main className="w-full max-w-2xl flex flex-col gap-4 sm:gap-8 items-center">
+      <main className="w-full max-w-2xl xl:max-w-screen-xl flex flex-col gap-4 sm:gap-8 items-center xl:grid xl:grid-cols-2">
         {/* Salary entry form */}
-        <CollapsibleSection title="Tilføj løn" defaultOpen={false}>
+        <CollapsibleSection title="Tilføj løn" defaultOpen={false} className="xl:col-span-2">
           <SalaryEntryForm onSubmit={addEntry} initialValues={editEntry ?? undefined} />
         </CollapsibleSection>
         
@@ -64,7 +64,7 @@ export default function Home() {
         </CollapsibleSection>
 
         {/* Stats */}
-        <CollapsibleSection title="Statistik">
+        <CollapsibleSection title="Statistik" className="xl:col-span-2">
           {loading ? (
             <div className="text-muted-foreground text-sm">Indlæser statistik...</div>
           ) : error ? (
