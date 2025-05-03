@@ -1,0 +1,49 @@
+# License
+
+## Software License (MIT)
+
+Copyright (c) 2024 Kasper Laursen
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+## Data License and Attribution
+
+The Consumer Price Index (CPI) data used in this application is provided by Danmarks Statistik 
+and is subject to their terms of use and attribution requirements.
+
+### Data Source Attribution:
+- Data provider: Danmarks Statistik (Statistics Denmark)
+- Dataset: Forbrugerprisindeks (Consumer Price Index)
+- Source URL: https://www.dst.dk/da/Statistik/emner/oekonomi/prisindeks/forbrugerprisindeks
+
+### Data Usage Terms:
+1. The data from Danmarks Statistik is used in accordance with their rules and regulations
+   for data usage (https://www.dst.dk/da/TilSalg/data-til-forskning/regler-og-datasikkerhed).
+2. This is an independent tool and is not affiliated with Danmarks Statistik.
+3. The calculations and visualizations in this application are for informational purposes only.
+
+## Disclaimer
+
+THIS SOFTWARE AND THE ACCOMPANYING DATA VISUALIZATIONS ARE PROVIDED "AS IS", 
+WITHOUT WARRANTY OF ANY KIND. THE DEVELOPERS TAKE NO RESPONSIBILITY FOR ANY 
+ERRORS OR MISTAKES IN THE CALCULATIONS. ALWAYS VERIFY IMPORTANT FINANCIAL 
+DECISIONS WITH A QUALIFIED PROFESSIONAL.
+
+No personal data or microdata is collected or processed. All salary data is 
+stored locally in the user's browser and is not shared with any third parties. 

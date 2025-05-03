@@ -1,6 +1,10 @@
 # Realløn.dk
 
+> **Disclaimer**: This tool is provided as-is without any warranty. While we strive for accuracy, the developer takes no responsibility for any errors or mistakes in the calculations. Always verify important financial decisions with a qualified professional.
+
 A web application that helps Danish workers track their salary history and compare it against the Consumer Price Index (CPI) to understand how their purchasing power changes over time.
+
+> **Note**: The calculations and visualizations in this application are for informational purposes only. While we use official CPI data from Danmarks Statistik, we cannot guarantee the accuracy of the calculations or their applicability to your specific situation.
 
 ## Features
 
@@ -191,6 +195,9 @@ Help users understand how their salary has evolved in real terms, adjusted for i
 - CPI data provided by [Danmarks Statistik](https://www.dst.dk/da/Statistik/emner/oekonomi/prisindeks/forbrugerprisindeks)
 - Built with [shadcn/ui](https://ui.shadcn.com/) components
 - Icons from [Lucide](https://lucide.dev/)
+
+## Source Code
+The complete source code for this application is available on [GitHub](https://github.com/kasperlaursen/reallon-dk). Feel free to explore, suggest improvements, or report issues.
 
 ## License
 Creative Commons CC 4.0 BY (data from Danmarks Statistik) 
