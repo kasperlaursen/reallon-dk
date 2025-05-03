@@ -4,6 +4,7 @@ import { useState } from "react";
 import { SalaryEntryForm } from "../components/salary/SalaryEntryForm";
 import { SalaryTimeline } from "../components/salary/SalaryTimeline";
 import { SalaryChart } from "../components/chart/SalaryChart";
+import { SalaryStats } from "../components/salary/SalaryStats";
 import { CHART_CONFIG } from "../constants";
 import { AppHeader } from "../components/ui/AppHeader";
 import { AppFooter } from "../components/ui/AppFooter";
@@ -25,6 +26,14 @@ export default function Home() {
   const { cpiData, loading, error } = useCPIData();
   const { chartData } = useChartData(entries, cpiData, selectedIdx);
 
+  console.log('Home render:', { 
+    entriesLength: entries.length, 
+    selectedIdx, 
+    hasCPIData: !!cpiData,
+    loading,
+    error
+  });
+
   return (
     <div className="flex flex-col items-center min-h-screen p-2 sm:p-8 gap-6 sm:gap-12 bg-background">
       <AppHeader />
@@ -41,6 +50,7 @@ export default function Home() {
             selectedIdx={selectedIdx}
             onSelect={selectEntry}
             onDelete={deleteEntry}
+            cpiData={cpiData}
           />
         </CollapsibleSection>
 
@@ -51,6 +61,21 @@ export default function Home() {
             loading={loading}
             config={CHART_CONFIG}
           />
+        </CollapsibleSection>
+
+        {/* Stats */}
+        <CollapsibleSection title="Statistik">
+          {loading ? (
+            <div className="text-muted-foreground text-sm">Indlæser statistik...</div>
+          ) : error ? (
+            <div className="text-destructive text-sm">Kunne ikke indlæse CPI data: {error}</div>
+          ) : (
+            <SalaryStats
+              entries={entries}
+              selectedIdx={selectedIdx}
+              cpiData={cpiData}
+            />
+          )}
         </CollapsibleSection>
       </main>
       <AppFooter onClearData={clearEntries} />

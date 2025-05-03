@@ -33,8 +33,9 @@ export function AppFooter({ onClearData }: AppFooterProps) {
             .
           </p>
           <p>
-            Din indtastede data gemmes KUN lokalt i din browser og deles ikke med nogen. 
-            Ingen persondata eller mikrodata indsamles eller behandles.
+            Din indtastede data gemmes KUN lokalt i din browser og deles ikke
+            med nogen. Ingen persondata eller mikrodata indsamles eller
+            behandles.
           </p>
           <p className="text-[10px]">
             © {new Date().getFullYear()} Realløn.dk. Udviklet af{" "}
@@ -46,18 +47,14 @@ export function AppFooter({ onClearData }: AppFooterProps) {
             >
               Kasper Laursen
             </a>
-            . Dette er et uafhængigt værktøj og er ikke tilknyttet Danmarks Statistik.
+            . Dette er et uafhængigt værktøj og er ikke tilknyttet Danmarks
+            Statistik.
           </p>
         </div>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={onClearData}
-          className="text-destructive hover:text-destructive"
-        >
-          Slet al data
+        <Button variant="default" size="sm" onClick={onClearData}>
+          Slet Data
         </Button>
       </div>
     </footer>
   );
-} 
+}

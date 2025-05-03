@@ -28,7 +28,7 @@ export const CHART_CONFIG = {
   },
   realSalary: {
     label: "Realløn",
-    color: "var(--chart-2)",
+    color: "var(--chart-real)",
   },
   cpiIndexed: {
     label: "Indeks løn",
