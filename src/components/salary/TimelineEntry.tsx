@@ -71,11 +71,15 @@ export function TimelineEntry({
                 color={CHART_CONFIG.salary.color}
               />
               <span className="text-muted-foreground hidden sm:inline">/</span>
-              <SalaryChange
-                amount={changes.realChange.amount}
-                percentage={changes.realChange.percentage}
-                color={CHART_CONFIG.realSalary.color}
-              />
+              {changes.realChange.amount === 0 && changes.realChange.percentage === 0 ? (
+                <span className="text-muted-foreground text-xs">Manglende data</span>
+              ) : (
+                <SalaryChange
+                  amount={changes.realChange.amount}
+                  percentage={changes.realChange.percentage}
+                  color={CHART_CONFIG.realSalary.color}
+                />
+              )}
             </div>
           )}
         </div>
