@@ -5,7 +5,6 @@ import {
   Line,
   XAxis,
   YAxis,
-  Tooltip,
   ResponsiveContainer,
   CartesianGrid,
   Legend,
@@ -54,8 +53,14 @@ export function SalaryChart({ data, loading, config }: SalaryChartProps) {
         {loading && "Indlæser..."}
         {!loading && data.length > 0 && (
           <ResponsiveContainer width="100%" height="100%">
-            <ChartContainer config={config as UIChartConfig} className="w-full h-full">
-              <LineChart data={data} margin={{ left: 12, right: 12, bottom: 16 }}>
+            <ChartContainer
+              config={config as UIChartConfig}
+              className="w-full h-full"
+            >
+              <LineChart
+                data={data}
+                margin={{ left: 12, right: 12, bottom: 16 }}
+              >
                 <CartesianGrid vertical={false} />
                 <XAxis
                   dataKey="label"
@@ -113,4 +118,4 @@ export function SalaryChart({ data, loading, config }: SalaryChartProps) {
       </div>
     </div>
   );
-} 
+}

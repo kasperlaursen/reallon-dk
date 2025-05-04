@@ -35,7 +35,7 @@ export function useChartData(
     }
 
     // Build salary step function
-    let chart: ChartData[] = [];
+    const chart: ChartData[] = [];
     let currentAmount = startEntry.amount;
     let nextEntryIdx = selectedEntryIndex + 1;
     const baseCPI = cpiData[startCPIIdx].value;

@@ -33,7 +33,7 @@ export function ChartInfo() {
           Hvis din <span style={{ color: CHART_CONFIG.realSalary.color }}>realløn</span> ligger over <span style={{ color: CHART_CONFIG.cpiIndexed.color }}>indeks-lønnen</span>, har du fået mere i løn end inflationen tilsiger.
         </li>
         <li>
-          Hvis din <span style={{ color: CHART_CONFIG.realSalary.color }}>realløn</span> ligger under <span style={{ color: CHART_CONFIG.cpiIndexed.color }}>indeks-lønnen</span>, har inflationen "spist" en del af din købekraft.
+          Hvis din <span style={{ color: CHART_CONFIG.realSalary.color }}>realløn</span> ligger under <span style={{ color: CHART_CONFIG.cpiIndexed.color }}>indeks-lønnen</span>, har inflationen &quot;spist&quot; en del af din købekraft.
         </li>
         <li>
           Det valgte startpunkt (markeret med øje-ikonet) bruges som reference for beregningerne.

@@ -29,7 +29,6 @@ interface TimelineEntryProps {
 
 export function TimelineEntry({
   entry,
-  index,
   isSelected,
   isLastEntry,
   onSelect,

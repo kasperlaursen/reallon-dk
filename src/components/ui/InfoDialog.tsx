@@ -3,7 +3,6 @@ import { Info } from "lucide-react";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -16,7 +15,7 @@ interface InfoDialogProps {
   children: React.ReactNode;
 }
 
-export function InfoDialog({ className, buttonClassName, title = "Information", children }: InfoDialogProps) {
+export function InfoDialog({ buttonClassName, title = "Information", children }: InfoDialogProps) {
   return (
     <Dialog>
       <DialogTrigger asChild>
