@@ -22,7 +22,6 @@ interface SalaryEntryFormProps {
 export function SalaryEntryForm({
   onSubmit,
   initialValues,
-  cpiData,
 }: SalaryEntryFormProps) {
   const [form, setForm] = useState<SalaryEntry>(
     initialValues ?? DEFAULT_SALARY_ENTRY
