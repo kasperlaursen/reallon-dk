@@ -16,11 +16,13 @@ import { SalaryEntry } from "../../types";
 interface SalaryEntryFormProps {
   onSubmit: (entry: SalaryEntry) => void;
   initialValues?: SalaryEntry;
+  cpiData: { year: number; month: number; value: number }[] | null;
 }
 
 export function SalaryEntryForm({
   onSubmit,
   initialValues,
+  cpiData,
 }: SalaryEntryFormProps) {
   const [form, setForm] = useState<SalaryEntry>(
     initialValues ?? DEFAULT_SALARY_ENTRY
@@ -47,6 +49,11 @@ export function SalaryEntryForm({
       const year = parseInt(numericValue, 10);
       setForm((f) => ({ ...f, year }));
     }
+  };
+
+  const handleMonthChange = (value: string) => {
+    const month = Number(value);
+    setForm((f) => ({ ...f, month }));
   };
 
   const handleSalaryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -102,9 +109,7 @@ export function SalaryEntryForm({
           </label>
           <Select
             value={form.month.toString()}
-            onValueChange={(value) =>
-              setForm((f) => ({ ...f, month: Number(value) }))
-            }
+            onValueChange={handleMonthChange}
           >
             <SelectTrigger className="w-full">
               <SelectValue placeholder="Vælg måned" className="w-full" />

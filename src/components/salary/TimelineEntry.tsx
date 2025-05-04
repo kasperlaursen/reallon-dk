@@ -2,7 +2,7 @@
 
 import { Button } from "../../components/ui/button";
 import { Toggle } from "../../components/ui/toggle";
-import { Eye, Trash2 } from "lucide-react";
+import { Eye, Trash2, AlertTriangle } from "lucide-react";
 import { SalaryEntry } from "../../types";
 import { CHART_CONFIG } from "../../constants";
 import { TimelineDot } from "./TimelineDot";
@@ -72,7 +72,10 @@ export function TimelineEntry({
               />
               <span className="text-muted-foreground hidden sm:inline">/</span>
               {changes.realChange.amount === 0 && changes.realChange.percentage === 0 ? (
-                <span className="text-muted-foreground text-xs">Manglende data</span>
+                <span className="text-destructive text-xs flex items-center gap-1">
+                  <AlertTriangle className="h-3 w-3" />
+                  Manglende data
+                </span>
               ) : (
                 <SalaryChange
                   amount={changes.realChange.amount}

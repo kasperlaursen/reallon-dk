@@ -12,6 +12,9 @@ import { useSalaryEntries } from "../hooks/useSalaryEntries";
 import { useCPIData } from "../hooks/useCPIData";
 import { useChartData } from "../hooks/useChartData";
 import { CPIErrorAlert } from "../components/ui/CPIErrorAlert";
+import { Alert, AlertDescription } from "../components/ui/alert";
+import { AlertTriangle } from "lucide-react";
+import { MONTHS_DA } from "../constants";
 
 export default function Home() {
   const {
@@ -25,6 +28,20 @@ export default function Home() {
   } = useSalaryEntries();
   const { cpiData, loading, error } = useCPIData();
   const { chartData } = useChartData(entries, cpiData, selectedIdx);
+
+  // Get latest CPI date
+  const latestCPIDate = cpiData && cpiData.length > 0
+    ? [...cpiData].sort((a, b) => {
+        if (a.year !== b.year) return b.year - a.year;
+        return b.month - a.month;
+      })[0]
+    : null;
+
+  // Check if any entries are beyond the latest CPI date
+  const hasEntriesBeyondCPI = latestCPIDate && entries.some(entry => 
+    entry.year > latestCPIDate.year || 
+    (entry.year === latestCPIDate.year && entry.month > latestCPIDate.month)
+  );
 
   console.log("Home render:", {
     entriesLength: entries.length,
@@ -44,15 +61,27 @@ export default function Home() {
           </div>
         )}
         
+        {hasEntriesBeyondCPI && latestCPIDate && (
+          <div className="xl:col-span-2 w-full">
+            <Alert variant="destructive">
+              <AlertTriangle className="h-4 w-4" />
+              <AlertDescription>
+                Forbrugerprisindeksen er kun tilgængelig til og med {MONTHS_DA[latestCPIDate.month - 1]} {latestCPIDate.year}. Beregninger vil være begrænsede for nyere datoer.
+              </AlertDescription>
+            </Alert>
+          </div>
+        )}
+        
         {/* Salary entry form */}
         <CollapsibleSection
           title="Tilføj løn"
-          defaultOpen={false}
+          defaultOpen={true}
           className="xl:col-span-2"
         >
           <SalaryEntryForm
             onSubmit={addEntry}
             initialValues={editEntry ?? undefined}
+            cpiData={cpiData}
           />
         </CollapsibleSection>
 
