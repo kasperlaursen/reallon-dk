@@ -14,9 +14,16 @@ export interface ChartData {
 }
 
 export interface CPIData {
-  year: number;
-  month: number;
-  value: number;
+  dataset: {
+    value: number[];
+    dimension: {
+      Tid: {
+        category: {
+          index: Record<string, number>;
+        };
+      };
+    };
+  };
 }
 
 export interface ChartConfig {

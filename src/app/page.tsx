@@ -11,6 +11,7 @@ import { CollapsibleSection } from "../components/ui/CollapsibleSection";
 import { useSalaryEntries } from "../hooks/useSalaryEntries";
 import { useCPIData } from "../hooks/useCPIData";
 import { useChartData } from "../hooks/useChartData";
+import { CPIErrorAlert } from "../components/ui/CPIErrorAlert";
 
 export default function Home() {
   const {
@@ -37,6 +38,12 @@ export default function Home() {
     <div className="flex flex-col items-center min-h-screen p-2 sm:p-8 gap-6 sm:gap-12 bg-background">
       <AppHeader />
       <main className="w-full max-w-2xl xl:max-w-screen-xl flex flex-col gap-4 sm:gap-8 items-center xl:grid xl:grid-cols-2">
+        {error && (
+          <div className="xl:col-span-2 w-full">
+            <CPIErrorAlert error={error} />
+          </div>
+        )}
+        
         {/* Salary entry form */}
         <CollapsibleSection
           title="Tilføj løn"

@@ -18,6 +18,7 @@ import { ChartTooltip as CustomChartTooltip } from "./ChartTooltip";
 import { InfoDialog } from "../../components/ui/InfoDialog";
 import { ChartData } from "../../types";
 import { CHART_CONFIG } from "../../constants";
+import { ChartInfo } from "./ChartInfo";
 
 interface SalaryChartProps {
   data: ChartData[];
@@ -43,7 +44,9 @@ export function SalaryChart({ data, loading, config }: SalaryChartProps) {
       <div className="mb-4">
         <div className="flex items-center gap-2">
           <h2 className="text-xl font-semibold">Løn vs. Forbrugerprisindeks</h2>
-          <InfoDialog buttonClassName="h-7 w-7" />
+          <InfoDialog buttonClassName="h-7 w-7">
+            <ChartInfo />
+          </InfoDialog>
         </div>
         <p className="text-sm text-muted-foreground">
           Udvikling fra valgt startpunkt ({data[0]?.label ?? "-"})
