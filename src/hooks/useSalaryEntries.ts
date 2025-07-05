@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import type { SalaryEntry } from "../types";
+import { DEFAULT_SALARY_HISTORY } from "../constants/defaultSalaryHistory";
 
 export function useSalaryEntries() {
   const [entries, setEntries] = useState<SalaryEntry[]>([]);
@@ -14,6 +15,12 @@ export function useSalaryEntries() {
       setEntries(loadedEntries);
       if (loadedEntries.length > 0) {
         setSelectedIdx(0); // Start with first entry
+      }
+    } else {
+      // No data stored — preload default demo salary history
+      setEntries(DEFAULT_SALARY_HISTORY);
+      if (DEFAULT_SALARY_HISTORY.length > 0) {
+        setSelectedIdx(0);
       }
     }
   }, []);
