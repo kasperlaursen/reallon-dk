@@ -1,203 +1,115 @@
 # Realløn.dk
 
-> **Disclaimer**: This tool is provided as-is without any warranty. While we strive for accuracy, the developer takes no responsibility for any errors or mistakes in the calculations. Always verify important financial decisions with a qualified professional.
+Realløn.dk is a local-first Vite + React application for comparing your salary history against the Danish consumer price index.
 
-A web application that helps Danish workers track their salary history and compare it against the Consumer Price Index (CPI) to understand how their purchasing power changes over time.
+The app has no owned backend. Salary data stays in `localStorage`, and CPI is fetched directly from Danmarks Statistik in the browser, then cached locally for offline-ish fallback.
 
-> **Note**: The calculations and visualizations in this application are for informational purposes only. While we use official CPI data from Danmarks Statistik, we cannot guarantee the accuracy of the calculations or their applicability to your specific situation.
+## Feature set
 
-## Features
+- Salary history with stable record IDs
+- Add, edit, delete, and clear local salary records
+- One salary record per month-year, enforced through replacement-on-duplicate
+- Select any salary record as the analysis baseline
+- Chart of nominal salary, real salary, and CPI-indexed target salary
+- KPI cards and detailed stats:
+  - total nominal and real change
+  - best and worst real-salary jumps
+  - exact trailing 12-month change
+  - CAGR based on month-accurate elapsed time
+- Pending-CPI handling for salary records newer than the latest available CPI month
+- Demo data on first run
+- Local CPI cache fallback when a later Danmarks Statistik fetch fails
 
-- **Salary Timeline**: Add and manage your salary history with details including:
-  - Salary amount
-  - Month and year
-  - Job title
-  - Employer name
-- **Interactive Visualization**: Compare your salary progression against inflation using:
-  - Step chart showing your nominal salary changes (orange line)
-  - Step chart showing your real salary adjusted for inflation (blue line)
-  - Line chart showing how your initial salary would have grown if it followed CPI
-- **Comprehensive Statistics**: Detailed analysis of your salary development:
-  - Total change since selected starting point (nominal and real)
-  - Largest fluctuations in real salary
-  - 12-month changes
-  - Average annual change (CAGR)
-- **Data Privacy**: All data is stored locally in your browser's localStorage
-- **Real-time CPI Data**: Fetches the latest Consumer Price Index data from Danmarks Statistik
+## Stack
 
-## Technical Details
-
-### Built With
-
-- Next.js (App Router)
-- React
+- Vite
+- React 19
 - TypeScript
-- Recharts for data visualization
-- ShadcnUI for the component library
-- TailwindCSS for styling
+- Tailwind CSS v4
+- shadcn/ui components
+- Recharts
+- TanStack Table
+- Vitest + Testing Library
 
-### Key Components
+## Local development
 
-1. **Salary Entry Form**
-   - Collapsible form for adding new salary entries
-   - Input validation for year and salary amounts
-   - Optional fields for job title and employer
-   - Auto-expands when fewer than 2 entries exist
-
-2. **Timeline View**
-   - Chronological display of salary entries
-   - Visual timeline with dots and connecting lines
-   - Quick actions for each entry (view/delete)
-   - Select any entry as the starting point for CPI comparison
-   - Color-coded arrows showing salary changes
-
-3. **Chart Visualization**
-   - Three-line chart comparing:
-     - Nominal salary (orange) - actual salary amounts
-     - Real salary (blue) - inflation-adjusted values
-     - CPI-indexed salary (green) - how starting salary would grow with inflation
-   - Custom tooltips showing detailed values
-   - Responsive design that adapts to screen size
-   - Danish number formatting
-
-4. **Statistics Section**
-   - Total change calculation
-   - Largest real salary fluctuations
-   - 12-month change analysis
-   - Compound annual growth rate (CAGR)
-   - Info buttons explaining each metric
-
-5. **Data Management**
-   - Automatic saving to localStorage
-   - Data persistence across sessions
-   - Option to clear all data
-   - Sorted entries by date
-
-### Calculations and Methodology
-
-#### Real Salary Calculation
-Real salary is calculated by adjusting the nominal salary for inflation using the CPI:
+```bash
+pnpm install
+pnpm dev
 ```
-RealSalary = NominalSalary * (StartingCPI / CurrentCPI)
+
+Useful commands:
+
+```bash
+pnpm build
+pnpm lint
+pnpm test:run
 ```
-This shows what your current salary is worth in terms of purchasing power at the starting point.
 
-#### Total Change
-- **Nominal Change**: Simple difference between latest and starting salary
-- **Real Change**: Difference between inflation-adjusted latest salary and starting salary
-- **Percentage Changes**: `((Final - Initial) / Initial) * 100`
+## Data model
 
-#### Largest Fluctuations
-- Compares consecutive real salary values
-- Calculates percentage change between each pair
-- Identifies maximum positive and negative changes
-- Shows the date range for these changes
+Core frontend types:
 
-#### 12-Month Change
-- Finds salary entry closest to 12 months before the latest entry
-- Calculates both nominal and real changes over this period
-- Helps understand short-term salary development
-
-#### Average Annual Change (CAGR)
-Calculated using the Compound Annual Growth Rate formula:
-```
-CAGR = (FinalValue / InitialValue)^(1/Years) - 1
-```
-This is calculated for both nominal and real values to show:
-- Average yearly nominal salary increase
-- Average yearly real purchasing power change
-
-### Data Structure
-
-The application uses the following main data structures:
-
-```typescript
-interface SalaryEntry {
-  year: number;
-  month: number;
-  amount: number;
-  employer?: string;
-  jobTitle?: string;
+```ts
+type SalaryRecord = {
+  id: string
+  year: number
+  month: number
+  amountDkk: number
+  employer: string
+  jobTitle: string
 }
 
-interface CPIData {
-  year: number;
-  month: number;
-  value: number;
-}
-
-interface ChartData {
-  label: string;
-  salary: number;
-  realSalary: number;
-  cpiIndexed: number;
+type CpiPoint = {
+  year: number
+  month: number
+  indexValue: number
 }
 ```
 
-### State Management
+App state is versioned in browser storage under `reallon:v1`. CPI data is cached separately under `reallon:cpi:v1`.
 
-The application uses React's useState and custom hooks to manage:
-- Salary entries (`useSalaryEntries`)
-- CPI data (`useCPIData`)
-- Chart data (`useChartData`)
-- Timeline selection
-- UI state (collapsible sections)
+## Calculation rules
 
-## Getting Started
+- Real salary: `nominalSalary * (baselineCpi / currentCpi)`
+- CPI-indexed salary: `baselineSalary * (currentCpi / baselineCpi)`
+- Trailing 12-month change uses the exact month offset in the monthly CPI series
+- CAGR uses month-based elapsed time, not rough year rounding
+- Salary records newer than the latest CPI month are stored but excluded from comparative stats and chart output until CPI exists
 
-1. Clone the repository
-2. Install dependencies:
-   ```bash
-   pnpm install
-   ```
-3. Run the development server:
-   ```bash
-   pnpm dev
-   ```
-4. Open [http://localhost:3000](http://localhost:3000) in your browser
+## Danmarks Statistik source
 
-## Data Privacy
+- Endpoint: [https://api.statbank.dk/v1/data](https://api.statbank.dk/v1/data)
+- Table: `PRIS113`
+- Format: `JSONSTAT`
 
-This application:
-- Stores all salary data locally in the browser
-- Does not send any personal data to external servers
-- Only connects to Danmarks Statistik to fetch CPI data
-- Provides a clear option to delete all stored data
+## Coolify / Nixpacks
 
-## Project Specification
+This repo is configured for a static-site build in Coolify.
 
-### Purpose
-Help users understand how their salary has evolved in real terms, adjusted for inflation, by comparing it to the official Danish Consumer Price Index (CPI).
+Recommended Coolify settings:
 
-### Features
-- Fetches CPI data (Forbrugerprisindeks) from Danmarks Statistik via their public API
-- User can input their salary for any month/year
-- Interactive chart shows how the salary's value has changed over time compared to the CPI
-- Users can select different starting points to analyze different periods
-- All user data is stored locally (no authentication, no backend storage)
-- Clean, modern, and mobile-friendly UI
-- Responsive layout optimized for all screen sizes
-- Ready for deployment on Vercel
+- Build pack: `Nixpacks`
+- Base directory: repo root
+- Publish directory: `dist`
+- Port: not needed for static deployment
+- Domain: `reallon.laursen.dev`
 
-### Technology Stack
-- **Framework:** Next.js (React, SSR, API routes, Vercel-friendly)
-- **Styling/UI:** Tailwind CSS + ShadCN UI components
-- **Charting:** Recharts (simple, interactive charts)
-- **State Management:** React useState hooks (local only)
-- **Data Storage:** LocalStorage (browser)
-- **Deployment:** Vercel
+Build steps are defined in [`nixpacks.toml`](/Users/kasperlaursen/repos/reallon-dk/nixpacks.toml).
 
-### Data Source
-- Danmarks Statistik API: https://api.statbank.dk/v1/data/PRIS113?format=JSON&Tid=*&Type=Hovedtal
+The deployment flow is:
 
-## Acknowledgments
+1. `pnpm install --frozen-lockfile`
+2. `pnpm build`
+3. Coolify serves the generated `dist/` output as a static site
 
-- CPI data provided by [Danmarks Statistik](https://www.dst.dk/da/Statistik/emner/oekonomi/prisindeks/forbrugerprisindeks)
-- Built with [shadcn/ui](https://ui.shadcn.com/) components
-- Icons from [Lucide](https://lucide.dev/)
+## Privacy
 
-## Source Code
-The complete source code for this application is available on [GitHub](https://github.com/kasperlaursen/reallon-dk). Feel free to explore, suggest improvements, or report issues.
+- Salary data stays in the browser
+- No authentication
+- No owned server
+- CPI is fetched directly from Danmarks Statistik
 
-## License
-Creative Commons CC 4.0 BY (data from Danmarks Statistik) 
+## Disclaimer
+
+This tool is informational only. Validate important financial decisions independently.

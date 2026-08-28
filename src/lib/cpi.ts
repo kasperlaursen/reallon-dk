@@ -1,80 +1,68 @@
 import { z } from "zod";
+import type { CpiPoint } from "@/types/domain";
+import { comparePeriods } from "@/lib/date";
 
 const API_URL = "https://api.statbank.dk/v1/data";
 
-// Define the JSON-stat schema
-const JsonStatDimensionSchema = z.object({
-  Tid: z.object({
-    category: z.object({
-      index: z.record(z.number())
-    })
-  })
+const jsonStatResponseSchema = z.object({
+  dataset: z.object({
+    dimension: z.object({
+      Tid: z.object({
+        category: z.object({
+          index: z.record(z.string(), z.number()),
+        }),
+      }),
+    }),
+    value: z.array(z.number()),
+  }),
 });
 
-const JsonStatDatasetSchema = z.object({
-  dimension: JsonStatDimensionSchema,
-  value: z.array(z.number())
-});
-
-const JsonStatResponseSchema = z.object({
-  dataset: JsonStatDatasetSchema
-});
-
-type JsonStatResponse = z.infer<typeof JsonStatResponseSchema>;
-
-export interface CPIDataPoint {
-  year: number;
-  month: number;
-  value: number;
-}
-
-let cpiCache: JsonStatResponse | null = null;
-
-export async function fetchCPIData(): Promise<JsonStatResponse> {
-  if (cpiCache) return cpiCache;
-  try {
-    const res = await fetch(API_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        table: "PRIS113",
-        format: "JSONSTAT",
-        variables: [
-          { code: "Tid", values: ["*"] }
-        ]
-      })
-    });
-    if (!res.ok) throw new Error("API error: " + res.status);
-    const rawData = await res.json();
-    
-    // Validate the response data
-    const data = JsonStatResponseSchema.parse(rawData);
-    cpiCache = data;
-    return data;
-  } catch (err) {
-    console.error("Failed to fetch CPI data", err);
-    throw err;
-  }
-}
-
-// Parse JSONSTAT CPI data to array of CPIDataPoint
-export function parseCPIData(jsonstat: JsonStatResponse): CPIDataPoint[] {
-  const { dimension, value } = jsonstat.dataset;
-  const tids = Object.keys(dimension.Tid.category.index);
-  
-  return tids.map((tid, i) => {
-    // tid is like "1980M01"
-    const year = Number(tid.slice(0, 4));
-    const month = Number(tid.slice(5, 7));
-    return {
-      year,
-      month,
-      value: value[i]
-    };
+export async function fetchRemoteCpiPoints(signal?: AbortSignal): Promise<CpiPoint[]> {
+  const response = await fetch(API_URL, {
+    method: "POST",
+    signal,
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      table: "PRIS113",
+      format: "JSONSTAT",
+      variables: [{ code: "Tid", values: ["*"] }],
+    }),
   });
+
+  if (!response.ok) {
+    throw new Error(`Danmarks Statistik svarede med ${response.status}.`);
+  }
+
+  const parsed = parseCpiResponse(await response.json());
+
+  if (parsed.length === 0) {
+    throw new Error("Danmarks Statistik returnerede ingen CPI-data.");
+  }
+
+  return parsed;
 }
 
-export function getCPIForMonth(cpi: CPIDataPoint[], year: number, month: number): number | null {
-  const found = cpi.find((d) => d.year === year && d.month === month);
-  return found ? found.value : null;
-} 
+export function parseCpiResponse(raw: unknown): CpiPoint[] {
+  const json = jsonStatResponseSchema.parse(raw);
+  const indexEntries = Object.entries(json.dataset.dimension.Tid.category.index).sort(
+    (left, right) => left[1] - right[1]
+  );
+
+  return indexEntries
+    .map(([periodKey, position]) => {
+      const match = /^(\d{4})M(\d{2})$/.exec(periodKey);
+      if (!match) {
+        return null;
+      }
+
+      return {
+        year: Number(match[1]),
+        month: Number(match[2]),
+        indexValue: json.dataset.value[position],
+      } satisfies CpiPoint;
+    })
+    .filter((point): point is CpiPoint => point !== null)
+    .sort(comparePeriods);
+}
